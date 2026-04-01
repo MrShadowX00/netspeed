@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { initAnalytics, trackPageView } from "../firebase";
 
 interface LookupResult {
   ip: string;
@@ -97,6 +98,8 @@ export default function IpLookupClient() {
   const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+
+  useEffect(() => { initAnalytics(); trackPageView("/ip-lookup"); }, []);
 
   // Fetch user's own IP on load to pre-fill
   useEffect(() => {

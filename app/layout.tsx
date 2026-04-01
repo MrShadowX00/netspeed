@@ -21,8 +21,11 @@ export const metadata: Metadata = {
     "ping test", "dns lookup", "ip lookup", "port checker", "subnet calculator",
     "bandwidth test", "network tools", "ip geolocation", "traceroute",
     "download speed test", "upload speed test", "wifi speed test",
-    "broadband test", "fiber speed test", "connection speed",
+    "broadband test", "fiber speed test", "5g speed test", "connection speed",
+    "internet connection test", "latency checker", "jitter test",
+    "bandwidth calculator", "network speed checker", "isp speed test",
     "net toollo", "network analyzer",
+    "network speed", "check my ip", "find my ip", "ip address lookup",
   ],
   openGraph: {
     title: "Net Toollo — Free Network & Internet Analysis Tools",

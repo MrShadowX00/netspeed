@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { initAnalytics, trackPageView } from "../firebase";
 
 const RECORD_TYPES = ["A", "AAAA", "CNAME", "MX", "NS", "TXT", "SOA", "ALL"] as const;
 type RecordType = (typeof RECORD_TYPES)[number];
@@ -56,6 +57,8 @@ export default function DnsClient() {
   const [result, setResult] = useState<LookupResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+
+  useEffect(() => { initAnalytics(); trackPageView("/dns-lookup"); }, []);
 
   const lookup = useCallback(
     async (queryDomain?: string, queryType?: RecordType) => {

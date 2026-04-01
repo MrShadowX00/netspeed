@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { initAnalytics, trackPageView } from "../firebase";
 import Link from "next/link";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -80,6 +81,8 @@ export default function BandwidthCalculatorClient({
   const [fileUnit, setFileUnit] = useState("GB");
   const [speed, setSpeed] = useState("100");
   const [speedUnit, setSpeedUnit] = useState("Mbps");
+
+  useEffect(() => { initAnalytics(); trackPageView("/bandwidth-calculator"); }, []);
 
   // Converter state
   const [convValue, setConvValue] = useState("100");

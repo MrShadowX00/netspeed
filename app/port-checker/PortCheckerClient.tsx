@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { initAnalytics, trackPageView } from "../firebase";
 import Link from "next/link";
 
 interface PortResult {
@@ -70,6 +71,8 @@ export default function PortCheckerClient({ faqData }: { faqData: FaqItem[] }) {
   const [portInput, setPortInput] = useState("");
   const [results, setResults] = useState<PortResult[]>([]);
   const [checking, setChecking] = useState(false);
+
+  useEffect(() => { initAnalytics(); trackPageView("/port-checker"); }, []);
 
   const handleCheck = async () => {
     const h = host.trim();

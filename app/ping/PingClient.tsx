@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { initAnalytics, trackPageView } from "../firebase";
 
 interface PingResult {
   seq: number;
@@ -226,6 +227,8 @@ export default function PingClient() {
   const [stopped, setStopped] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
   const seqRef = useRef(0);
+
+  useEffect(() => { initAnalytics(); trackPageView("/ping"); }, []);
 
   const doPing = useCallback(async (signal: AbortSignal): Promise<PingResult> => {
     seqRef.current += 1;

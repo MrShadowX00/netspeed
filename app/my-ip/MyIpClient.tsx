@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { initAnalytics, trackPageView } from "../firebase";
 
 interface IpData {
   ip: string;
@@ -105,6 +106,8 @@ export default function MyIpClient() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => { initAnalytics(); trackPageView("/my-ip"); }, []);
 
   const fetchIp = useCallback(async () => {
     setLoading(true);

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { initAnalytics, trackPageView } from "../firebase";
 import Link from "next/link";
 
 // ─── Binary math helpers ────────────────────────────────────────────────────
@@ -93,6 +94,8 @@ export default function SubnetCalculatorClient({
   const [prefix, setPrefix] = useState(24);
   const [calculated, setCalculated] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => { initAnalytics(); trackPageView("/subnet-calculator"); }, []);
 
   // Converter state
   const [convPrefix, setConvPrefix] = useState(24);
