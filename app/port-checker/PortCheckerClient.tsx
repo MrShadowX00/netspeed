@@ -49,67 +49,14 @@ const PORT_REFERENCE = [
 ];
 
 async function checkPort(host: string, port: number): Promise<"open" | "closed" | "filtered"> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 5000);
-
   try {
-    // Try WebSocket connection
-    const ws = new WebSocket(`wss://${host}:${port}`);
-    const result = await new Promise<"open" | "closed" | "filtered">((resolve) => {
-      const wsTimeout = setTimeout(() => {
-        ws.close();
-        resolve("filtered");
-      }, 4000);
-
-      ws.onopen = () => {
-        clearTimeout(wsTimeout);
-        ws.close();
-        resolve("open");
-      };
-      ws.onerror = () => {
-        clearTimeout(wsTimeout);
-        // Error could mean closed or the service doesn't speak WebSocket but port is open
-        // Try fetch as fallback
-        resolve("check-fetch" as never);
-      };
+    const res = await fetch(`/api/check-port?host=${encodeURIComponent(host)}&port=${port}`, {
+      signal: AbortSignal.timeout(10000),
     });
-
-    if (result !== ("check-fetch" as never)) {
-      clearTimeout(timeout);
-      return result;
-    }
+    const data = await res.json();
+    return data.status || "closed";
   } catch {
-    // WebSocket not available, fall through to fetch
-  }
-
-  try {
-    await fetch(`https://${host}:${port}/`, {
-      mode: "no-cors",
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-    return "open";
-  } catch (err) {
-    clearTimeout(timeout);
-    if (err instanceof DOMException && err.name === "AbortError") {
-      return "filtered";
-    }
-    // Try http as well
-    try {
-      const controller2 = new AbortController();
-      const timeout2 = setTimeout(() => controller2.abort(), 4000);
-      await fetch(`http://${host}:${port}/`, {
-        mode: "no-cors",
-        signal: controller2.signal,
-      });
-      clearTimeout(timeout2);
-      return "open";
-    } catch (err2) {
-      if (err2 instanceof DOMException && err2.name === "AbortError") {
-        return "filtered";
-      }
-      return "closed";
-    }
+    return "filtered";
   }
 }
 

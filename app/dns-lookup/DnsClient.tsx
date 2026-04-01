@@ -82,7 +82,7 @@ export default function DnsClient() {
           const responses = await Promise.allSettled(
             types.map((rt) =>
               fetch(
-                `https://dns.google/resolve?name=${encodeURIComponent(d)}&type=${rt}`
+                `/api/dns?name=${encodeURIComponent(d)}&type=${rt}`
               ).then((r) => r.json())
             )
           );
@@ -93,7 +93,7 @@ export default function DnsClient() {
           }
         } else {
           const resp = await fetch(
-            `https://dns.google/resolve?name=${encodeURIComponent(d)}&type=${t}`
+            `/api/dns?name=${encodeURIComponent(d)}&type=${t}`
           );
           const data = await resp.json();
           if (data.Answer) {
