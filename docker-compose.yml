@@ -1,0 +1,7 @@
+services:
+  netspeed:
+    build: .
+    container_name: netspeed-web
+    restart: unless-stopped
+    ports:
+      - "3011:3000"
