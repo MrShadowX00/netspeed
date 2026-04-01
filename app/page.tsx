@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
+import { initAnalytics, trackPageView, trackEvent } from "./firebase";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -268,6 +269,12 @@ export default function Home() {
   const abortRef = useRef<AbortController | null>(null);
   const runningRef = useRef(false);
 
+  // Firebase Analytics
+  useEffect(() => {
+    initAnalytics();
+    trackPageView("/");
+  }, []);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -466,13 +473,20 @@ export default function Home() {
     setPhase("complete");
     setPhaseText("Test Complete");
     setCurrentSpeed(0);
-    setResults({
+    const finalResults = {
       download: Math.round(download * 100) / 100,
       upload: Math.round(upload * 100) / 100,
       ping,
       jitter,
-    });
+    };
+    setResults(finalResults);
     runningRef.current = false;
+    trackEvent("speed_test_complete", {
+      download: finalResults.download,
+      upload: finalResults.upload,
+      ping: finalResults.ping,
+      jitter: finalResults.jitter,
+    });
   }, [runPingTest, runDownloadTest, runUploadTest]);
 
   const handleStart = () => {
